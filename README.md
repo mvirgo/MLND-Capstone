@@ -12,6 +12,7 @@ Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-C
 * Obtaining camera calibration for the camera used to obtain driving video (see `cam_calib.py`)
 * Load in all road images (accounting for time series), and save to a pickle file (see `load_road_images.py`)
 * Undistort images (using the camera calibration) and perspective transform to top-down images, save the transformed images (see `undistort_and_transform.py`)
+* Created a file (based on my previous Advanced Lane Lines model, see `make_labels.py`) to calculate the lines, and to save the line data (which will be the labels for each image) to a pickle file. This file needs the lines re-drawn over the perspective transformed images in red to work appropriately.
 
 ## Current Status
 I am currently in the process of manually drawing over the lane lines in the perspective transform images. Doing so helps to supplement the detection of the lines, as I was use computer vision techniques in order to calculate the line data needed for labels for the eventual training of my neural network.
@@ -20,7 +21,7 @@ I originally obtained nearly 700 seconds of video (over 11 minutes), which was o
 
 ## Issues / Challenges so far
 #### General
-* File ordering - using `glob.glob` does not pull in images in a natural counting fashion, wherein 10 follows 9, but looks at the first digit followed by the second digit. I needed to add in an additional function (see Lines 13-16 in `3_load_road_images.py`) to get it to pull the images in normally. This is crucial to make sure the labelling is matched up with the same image later on.
+* File ordering - using `glob.glob` does not pull in images in a natural counting fashion, wherein 10 follows 9, but looks at the first digit followed by the second digit. I needed to add in an additional function (see Lines 13-16 in `load_road_images.py`) to get it to pull the images in normally. This is crucial to make sure the labelling is matched up with the same image later on.
 
 #### Images
 The below issues often caused me to have to throw out the image:
@@ -36,7 +37,6 @@ The below issues often caused me to have to throw out the image:
 
 ## Upcoming 
 * Finish manual re-draw of lane lines (to maximize CV-based labels for feeding into neural network)
-* Creation of file (based on my previous Advanced Lane Lines model) to calculate the lines, and to save the line data (which will be the labels for each image) to a pickle file
 * Creation of a deep neural network to predict lane lines - either:
   * a model that calculates the lines from the already perspective transformed image, or
   * a model that calculates the line prior to perspective transformation
