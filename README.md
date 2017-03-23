@@ -17,7 +17,7 @@ Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-C
 ## Current Status
 I am currently in the process of manually drawing over the lane lines in the perspective transform images. Doing so helps to supplement the detection of the lines, as I was use computer vision techniques in order to calculate the line data needed for labels for the eventual training of my neural network.
 
-I originally obtained nearly 700 seconds of video (over 11 minutes), which was over 21,000 frames. After manually getting rid of blurry images and others (such as those with little to no visible lines within the area for which the perspective transformation would occur), I had over 14,000 images. In order to account for similar images within small spans of time, I am currently using only 1 in 10 images, or 3 frames out of each second of video. As such, I am going to end up manually re-drawing the lines on over 1,400 images. Due to some of the issues identified below, I have had to throw out a couple rounds of doing this manual re-draw, and am currently only at around 350 of the 1,400 images I will use for my initial neural network training.
+I originally obtained nearly 700 seconds of video (over 11 minutes), which was over 21,000 frames. After manually getting rid of blurry images and others (such as those with little to no visible lines within the area for which the perspective transformation would occur), I had over 14,000 images. In order to account for similar images within small spans of time, I am currently using only 1 in 10 images, or 3 frames out of each second of video. As such, I am going to end up manually re-drawing the lines on over 1,400 images. Due to some of the issues identified below, I have had to throw out a couple rounds of doing this manual re-draw, and am currently only at around 400 of the 1,400 images I will use for my initial neural network training.
 
 ## Issues / Challenges so far
 #### General
@@ -34,6 +34,7 @@ The below issues often caused me to have to throw out the image:
 * Time series - especially when going slower, frame to frame images have little change and could allow the final model to "peek" into the validation data
 * Lines not extending far enough down - although the lane lines may be visible in the regular image, they may disappear in the perspective-transformed image, making it impossible to label
 * Given that I am manually drawing lines in red (for putting through the CV-based model for labelling of line data purposes), tail lights at night could potentially add unwanted data points in the thresholded images. Additionally, blue LED lights at night could also cause problems if I were to draw lines in blue. I have not as of yet looked at how much green is in each image, but assume grass or leaves could also cause issues.
+* Certain images failed with the histogram and had to be slightly re-drawn, in a select few cases meaning the drawn line needed to be extended further than the original image showed.
 
 ## Upcoming 
 * Finish manual re-draw of lane lines (to maximize CV-based labels for feeding into neural network)
@@ -46,3 +47,7 @@ The below issues often caused me to have to throw out the image:
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
 * Complete final project write-up
+
+#### Minor potential improvements
+* The function `natural_key` is currently contained in both `load_road_images.py` and `make_labels.py`. This should be consolidated down (probably in a separate file; may also consolidate other helper functions within there).
+* The `make_labels.py` file is currently a little inefficient from a memory perspective, as it pulls from one list into another. I should combine some of the functions to skip the middle list and avoid using extra memory.
