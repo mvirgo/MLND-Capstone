@@ -65,7 +65,6 @@ def lane_detection(image_list):
     Advanced Lane Lines project.
     """
     for binary_warped in image_list:
-        # Assuming you have created a warped binary image called "binary_warped"
         # Take a histogram of the bottom half of the image
         histogram = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
         # Create an output image to draw on and  visualize the result
@@ -134,7 +133,7 @@ def lane_detection(image_list):
         right_fit = np.polyfit(righty, rightx, 2)
         
         # Append to the labels list
-        lane_labels.append([np.append(left_fit, right_fit)])
+        lane_labels.append(np.append(left_fit, right_fit))
 
 # Run through all the images
 lane_detection(binary_bird)
