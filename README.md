@@ -13,6 +13,7 @@ Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-C
 * Load in all road images (accounting for time series), and save to a pickle file (see `load_road_images.py`)
 * Undistort images (using the camera calibration) and perspective transform to top-down images, save the transformed images (see `undistort_and_transform.py`)
 * Created a file (based on my previous Advanced Lane Lines model, see `make_labels.py`) to calculate the lines, and to save the line data (which will be the labels for each image) to a pickle file. This file needs the lines re-drawn over the perspective transformed images in red to work appropriately.
+* Built a neural network (see `unopt_NN.py`) that can take perspect transformed images and labels, then train to predict labels on new perspective transformed images. This neural network is *unoptimized* but can at least output the necessary six labels. I will continue to improve the model in later steps.
 
 ## Current Status
 I am currently in the process of manually drawing over the lane lines in the perspective transform images. Doing so helps to supplement the detection of the lines, as I was use computer vision techniques in order to calculate the line data needed for labels for the eventual training of my neural network.
@@ -39,10 +40,9 @@ The below issues often caused me to have to throw out the image:
 
 ## Upcoming 
 * Finish manual re-draw of lane lines (to maximize CV-based labels for feeding into neural network)
-* Creation of a deep neural network to predict lane lines - either:
-  * a model that calculates the lines from the already perspective transformed image, or
-  * a model that calculates the line prior to perspective transformation - perhaps using a crop layer to speed training
-* Optimization of the above model (parameters, architecture, adding a python generator)
+* Creation of a second deep neural network to predict lane lines using:
+  * a model that calculates the line prior to perspective transformation - perhaps using a keras crop layer to help focus the neural network's training on the important area of the images (i.e. below the horizon line). This model would *potentially* skip the need to ever perspective transform the original image.
+* Optimization of the above model(s) (parameters, architecture, adding a python generator)
 * Based on which neural network model I choose above, create a file to re-draw the lane lines
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
