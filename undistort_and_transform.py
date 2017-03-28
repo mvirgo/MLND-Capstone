@@ -1,5 +1,5 @@
 """This file undistorts each road image using the camera calibration
-obtained from '2_cam_calib.py'. The images are then perspective
+obtained from 'cam_calib.py'. The images are then perspective
 transformed to provide a top-down view.
 """
 
@@ -15,15 +15,6 @@ dist = pickle.load(open( "dist.p", "rb" ))
 # Re-load road images
 road_images = pickle.load(open('road_images.p', "rb" ))
 
-# Make list for undistorted images
-undist_road = []
-
-for image in road_images:
-    dst = cv2.undistort(image, mtx, dist, None, mtx)
-    undist_road.append(dst)
-    
-road_images = []
-
 # Perspective transform
 def birds_eye(img, mtx, dist):
     """ Performs perspective transformation on an image.
@@ -33,7 +24,7 @@ def birds_eye(img, mtx, dist):
     # Undistort the image using camera calibration info
     undist = cv2.undistort(img, mtx, dist, None, mtx)
     # Convert to grayscale
-    gray = cv2.cvtColor(undist,cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(undist,cv2.COLOR_RGB2GRAY)
     offset = 300 # offset for dst points
     # Grab the image shape
     img_size = (gray.shape[1], gray.shape[0])
@@ -54,13 +45,9 @@ def birds_eye(img, mtx, dist):
 # so only one is needed. This will be used later to revert the images
 # back to normal.
 
-# Counter so perspective matrix only saved once
-counter = 0
-
 # Iterate through each image, perspective transform, save.
-for n, i in enumerate(undist_road):
-    top_down, perspective_M = birds_eye(i, mtx, dist)
+for n in range(len(road_images)):
+    top_down, perspective_M = birds_eye(road_images[n], mtx, dist)
     mpimg.imsave("perspect/perspect%d.jpg" % (n), top_down)
-    counter += 1
-    if counter == 1:
+    if n == 0:
         pickle.dump(perspective_M,open('perspective_matrix.p', "wb" ))
