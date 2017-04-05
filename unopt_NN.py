@@ -20,29 +20,41 @@ one item to be updated in a more optimal network for the other labels),
 """
 
 # Load training images
-train_images = pickle.load(open( "perspective_images.p", "rb" ))
+train_images = pickle.load(open("perspective_images.p", "rb" ))
 
 # Load image labels
-labels = pickle.load(open( "lane_labels.p", "rb" ))
+labels = pickle.load(open("lane_labels.p", "rb" ))
 
-def normalize(num):
-    """ Normalizes the value of the constant within the label
-    for each line, based on the image width of 1280 pixels.
-    """
-    new_num = (num - 640) / 1280
-    return new_num
+# The below code will normalize the labels by each coefficient.
+def norm_inputs(labels):
+    labels_by_coeff = [[],[],[],[],[],[]]
+    means = []
+    std_devs = []
+
+    for label in labels:
+        for n in range(len(label)):
+            labels_by_coeff[n].append(label[n])
+
+    for coeff_list in labels_by_coeff:
+        means.append(np.mean(coeff_list))
+        std_devs.append(np.std(coeff_list))
+        
+    return means, std_devs
 
 def norm_label(label):
-    """ Feeds each of the lane line constants into
-    the normalize function above for a given label.
-    """
-    label[2] = normalize(label[2])
-    label[5] = normalize(label[5])
+    for n in range(len(label)):
+        label[n] = (label[n] - means[n]) / std_devs[n]
+    return label
+
+def rev_norm_label(label):
+    for n in range(len(label)):
+        label[n] = label[n] * std_devs[n] + means[n]
     return label
 
 # Iterate through all labels to normalize them.
-for n in range(len(labels)):
-    labels[n] = norm_label(label)
+means, std_devs = norm_inputs(labels) 
+for n, label in enumerate(labels):
+    labels[n] = norm_label(label) 
 
 """ The below iterates through all images to resize down
 to 1/8th size, grayscales, and then adds an additional
