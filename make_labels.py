@@ -20,9 +20,8 @@ def natural_key(string_):
 
 def load_drawn_images():
     """Load re-drawn lane image locations"""
-    drawn_image_locs = glob.glob('draw/*.jpg')
+    drawn_image_locs = glob.glob('draw_full/*.jpg')
     sort_drawn_image_locs = sorted(drawn_image_locs, key=natural_key)
-    counter = 0
     for fname in sort_drawn_image_locs:
         img = mpimg.imread(fname)
         drawn_images.append(img)     
@@ -56,6 +55,45 @@ for image in drawn_images:
 # Make a list to hold the 'labels' - six coefficients, two for each line
 lane_labels = []
 
+def left_line_detect(out_img, leftx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter):
+    # Identify left window boundaries
+    win_xleft_low = leftx_current - margin
+    win_xleft_high = leftx_current + margin
+    # Draw the windows on the visualization image
+    cv2.rectangle(out_img,(win_xleft_low,win_y_low),(win_xleft_high,win_y_high),(0,255,0), 2)
+    # Identify the nonzero pixels in x and y within the window
+    good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
+    # Append these indices to the lists
+    #left_lane_inds.append(good_left_inds)
+    # If you found > minpix pixels, recenter next window on their mean position
+    if len(good_left_inds) > minpix:
+        leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
+    if counter >= 5:
+        if win_xleft_high > window_max or win_xleft_low < 0:
+            left_tracker = False
+
+    return good_left_inds, leftx_current
+
+def right_line_detect(out_img, rightx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter):
+    # Identify right window boundaries
+    win_xright_low = rightx_current - margin
+    win_xright_high = rightx_current + margin
+    # Draw the windows on the visualization image
+    cv2.rectangle(out_img,(win_xright_low,win_y_low),(win_xright_high,win_y_high),(0,255,0), 2)
+    # Identify the nonzero pixels in x and y within the window
+    good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
+    # Append these indices to the lists
+    #right_lane_inds.append(good_right_inds)
+    # If you found > minpix pixels, recenter next window on their mean position
+    if len(good_right_inds) > minpix:        
+        rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
+    if counter >= 5:
+        if win_xright_high > window_max or win_xright_low < 0:
+            right_tracker = False
+
+    return good_right_inds, rightx_current
+    
+
 def lane_detection(image_list):
     """Iterates through each binary thresholded image. Uses sliding
     windows to detect lane points, and fits lines to these points.
@@ -65,6 +103,7 @@ def lane_detection(image_list):
     Advanced Lane Lines project.
     """
     for binary_warped in image_list:
+        # Assuming you have created a warped binary image called "binary_warped"
         # Take a histogram of the bottom half of the image
         histogram = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
         # Create an output image to draw on and  visualize the result
@@ -76,7 +115,7 @@ def lane_detection(image_list):
         rightx_base = np.argmax(histogram[midpoint:]) + midpoint
 
         # Choose the number of sliding windows
-        nwindows = 9
+        nwindows = 35
         # Set height of windows
         window_height = np.int(binary_warped.shape[0]/nwindows)
         # Identify the x and y positions of all nonzero pixels in the image
@@ -93,30 +132,32 @@ def lane_detection(image_list):
         # Create empty lists to receive left and right lane pixel indices
         left_lane_inds = []
         right_lane_inds = []
+        left_tracker = True
+        right_tracker = True
+        counter = 0
 
         # Step through the windows one by one
         for window in range(nwindows):
-            # Identify window boundaries in x and y (and right and left)
             win_y_low = binary_warped.shape[0] - (window+1)*window_height
             win_y_high = binary_warped.shape[0] - window*window_height
-            win_xleft_low = leftx_current - margin
-            win_xleft_high = leftx_current + margin
-            win_xright_low = rightx_current - margin
-            win_xright_high = rightx_current + margin
-            # Draw the windows on the visualization image
-            cv2.rectangle(out_img,(win_xleft_low,win_y_low),(win_xleft_high,win_y_high),(0,255,0), 2) 
-            cv2.rectangle(out_img,(win_xright_low,win_y_low),(win_xright_high,win_y_high),(0,255,0), 2) 
-            # Identify the nonzero pixels in x and y within the window
-            good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
-            good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
-            # Append these indices to the lists
-            left_lane_inds.append(good_left_inds)
-            right_lane_inds.append(good_right_inds)
-            # If you found > minpix pixels, recenter next window on their mean position
-            if len(good_left_inds) > minpix:
-                leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
-            if len(good_right_inds) > minpix:        
-                rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
+            window_max = binary_warped.shape[1]
+            if left_tracker == True and right_tracker == True:
+                good_left_inds, leftx_current = left_line_detect(out_img, leftx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter)
+                good_right_inds, rightx_current = right_line_detect(out_img, rightx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter)
+                # Append these indices to the lists
+                left_lane_inds.append(good_left_inds)
+                right_lane_inds.append(good_right_inds)
+                counter += 1
+            elif left_tracker == True:
+                good_left_inds, leftx_current = left_line_detect(out_img, leftx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter)
+                # Append these indices to the list
+                left_lane_inds.append(good_left_inds)
+            elif right_tracker == True:
+                good_right_inds, rightx_current = right_line_detect(out_img, rightx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter)
+                # Append these indices to the list
+                right_lane_inds.append(good_right_inds)
+            else:
+                break
 
         # Concatenate the arrays of indices
         left_lane_inds = np.concatenate(left_lane_inds)
@@ -131,6 +172,20 @@ def lane_detection(image_list):
         # Fit a second order polynomial to each
         left_fit = np.polyfit(lefty, leftx, 2)
         right_fit = np.polyfit(righty, rightx, 2)
+
+        # Look around initial line to improve fit
+        margin2 = 150
+        left_lane_inds = ((nonzerox > (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] - margin2)) & (nonzerox < (left_fit[0]*(nonzeroy**2) + left_fit[1]*nonzeroy + left_fit[2] + margin2))) 
+        right_lane_inds = ((nonzerox > (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] - margin2)) & (nonzerox < (right_fit[0]*(nonzeroy**2) + right_fit[1]*nonzeroy + right_fit[2] + margin2)))  
+
+        # Again, extract left and right line pixel positions
+        leftx = nonzerox[left_lane_inds]
+        lefty = nonzeroy[left_lane_inds] 
+        rightx = nonzerox[right_lane_inds]
+        righty = nonzeroy[right_lane_inds]
+        # Fit a second order polynomial to each
+        left_fit = np.polyfit(lefty, leftx, 2)
+        right_fit = np.polyfit(righty, rightx, 2)
         
         # Append to the labels list
         lane_labels.append(np.append(left_fit, right_fit))
@@ -139,4 +194,4 @@ def lane_detection(image_list):
 lane_detection(binary_bird)
 
 # Save the final list to a pickle file for later
-pickle.dump(lane_labels,open('lane_labels.p', "wb" ))
+pickle.dump(lane_labels,open('lane_labels3.p', "wb" ))
