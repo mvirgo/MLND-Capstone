@@ -6,13 +6,13 @@ and save the labels to a pickle file for later.
 """
 
 import numpy as np
-import os
 import cv2
 import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 import glob
 import pickle
 import re
+from scipy.ndimage.interpolation import rotate
+from scipy.misc import imresize
 
 def natural_key(string_):
     """See http://www.codinghorror.com/blog/archives/001018.html"""
@@ -20,7 +20,7 @@ def natural_key(string_):
 
 def load_drawn_images():
     """Load re-drawn lane image locations"""
-    drawn_image_locs = glob.glob('draw_full/*.jpg')
+    drawn_image_locs = glob.glob('draw/*.jpg')
     sort_drawn_image_locs = sorted(drawn_image_locs, key=natural_key)
     for fname in sort_drawn_image_locs:
         img = mpimg.imread(fname)
@@ -63,8 +63,6 @@ def left_line_detect(out_img, leftx_current, margin, minpix, nonzerox, nonzeroy,
     cv2.rectangle(out_img,(win_xleft_low,win_y_low),(win_xleft_high,win_y_high),(0,255,0), 2)
     # Identify the nonzero pixels in x and y within the window
     good_left_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xleft_low) & (nonzerox < win_xleft_high)).nonzero()[0]
-    # Append these indices to the lists
-    #left_lane_inds.append(good_left_inds)
     # If you found > minpix pixels, recenter next window on their mean position
     if len(good_left_inds) > minpix:
         leftx_current = np.int(np.mean(nonzerox[good_left_inds]))
@@ -82,8 +80,6 @@ def right_line_detect(out_img, rightx_current, margin, minpix, nonzerox, nonzero
     cv2.rectangle(out_img,(win_xright_low,win_y_low),(win_xright_high,win_y_high),(0,255,0), 2)
     # Identify the nonzero pixels in x and y within the window
     good_right_inds = ((nonzeroy >= win_y_low) & (nonzeroy < win_y_high) & (nonzerox >= win_xright_low) & (nonzerox < win_xright_high)).nonzero()[0]
-    # Append these indices to the lists
-    #right_lane_inds.append(good_right_inds)
     # If you found > minpix pixels, recenter next window on their mean position
     if len(good_right_inds) > minpix:        
         rightx_current = np.int(np.mean(nonzerox[good_right_inds]))
@@ -104,10 +100,25 @@ def lane_detection(image_list):
     """
     for binary_warped in image_list:
         # Assuming you have created a warped binary image called "binary_warped"
-        # Take a histogram of the bottom half of the image
-        histogram = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
+        # Make rotations of the original image so histograms can be take of each orientation
+        rotation_angle = 20
+        left = rotate(binary_warped, rotation_angle)
+        left = cv2.resize(left, (binary_warped.shape[1], binary_warped.shape[0]))
+        right = rotate(binary_warped, -rotation_angle)     
+        right = cv2.resize(right, (binary_warped.shape[1], binary_warped.shape[0]))
+        
+        # Take a histogram of the bottom half of each of the images
+        histogram_1 = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
+        histogram_2 = np.sum(left[left.shape[0]/2:,:], axis=0)
+        histogram_3 = np.sum(right[right.shape[0]/2:,:], axis=0)
+        
+        # Stack and average these three histograms
+        histogram = np.stack((histogram_1, histogram_2, histogram_3))
+        histogram = np.average(histogram, axis = 0)
+        
         # Create an output image to draw on and  visualize the result
         out_img = np.dstack((binary_warped, binary_warped, binary_warped))*255
+        
         # Find the peak of the left and right halves of the histogram
         # These will be the starting point for the left and right lines
         midpoint = np.int(histogram.shape[0]/2)
@@ -194,4 +205,4 @@ def lane_detection(image_list):
 lane_detection(binary_bird)
 
 # Save the final list to a pickle file for later
-pickle.dump(lane_labels,open('lane_labels3.p', "wb" ))
+pickle.dump(lane_labels,open('lane_labels.p', "wb" ))
