@@ -11,12 +11,9 @@ from numpy import newaxis
 """ This file contains the unoptimized convolutional neural network
 for detecting lane lines. This file currently contains the necessary code
 to 1) load the perspective transformed images and labels pickle files,
-2) normalize the third and sixth labels for the image width (note this is
-one item to be updated in a more optimal network for the other labels), 
-3) resizes and grayscales the images for more efficient training,
-4) shuffles and then splits the data into training and validation sets,
-5) creates the neural network architecture, 6) trains the network,
-7) saves down the model architecture and weights, 8) shows the model summary.
+2) shuffles and then splits the data into training and validation sets,
+3) creates the neural network architecture, 4) trains the network,
+5) saves down the model architecture and weights, 6) shows the model summary.
 """
 
 # Load training images
@@ -24,50 +21,6 @@ train_images = pickle.load(open("perspective_images.p", "rb" ))
 
 # Load image labels
 labels = pickle.load(open("lane_labels.p", "rb" ))
-
-# The below code will normalize the labels by each coefficient.
-def norm_inputs(labels):
-    labels_by_coeff = [[],[],[],[],[],[]]
-    means = []
-    std_devs = []
-
-    for label in labels:
-        for n in range(len(label)):
-            labels_by_coeff[n].append(label[n])
-
-    for coeff_list in labels_by_coeff:
-        means.append(np.mean(coeff_list))
-        std_devs.append(np.std(coeff_list))
-        
-    return means, std_devs
-
-def norm_label(label):
-    for n in range(len(label)):
-        label[n] = (label[n] - means[n]) / std_devs[n]
-    return label
-
-def rev_norm_label(label):
-    for n in range(len(label)):
-        label[n] = label[n] * std_devs[n] + means[n]
-    return label
-
-# Iterate through all labels to normalize them.
-means, std_devs = norm_inputs(labels) 
-for n, label in enumerate(labels):
-    labels[n] = norm_label(label) 
-
-""" The below iterates through all images to resize down
-to 1/8th size, grayscales, and then adds an additional
-dimension back to make feeding into the network easier.
-Note that the grayscaling removes the extra dimension.
-This should be a function, but the eventual plan is to
-do the below in a python generator.
-"""
-for n, i in enumerate(train_images):
-    new_image = imresize(train_images[n], (90, 160, 3))
-    new_image = cv2.cvtColor(new_image, cv2.COLOR_RGB2GRAY)
-    new_image = new_image[..., newaxis]
-    train_images[n] = new_image
 
 # Make into arrays as the neural network wants these
 train_images = np.array(train_images)
