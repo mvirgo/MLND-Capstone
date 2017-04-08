@@ -22,9 +22,7 @@ def load_drawn_images():
     """Load re-drawn lane image locations"""
     drawn_image_locs = glob.glob('draw/*.jpg')
     sort_drawn_image_locs = sorted(drawn_image_locs, key=natural_key)
-    for fname in sort_drawn_image_locs:
-        img = mpimg.imread(fname)
-        drawn_images.append(img)     
+    return sort_drawn_image_locs    
 
 def pipeline(img, R_thresh = (230, 255)):
     """Threshold the re-drawn images for high red threshold"""
@@ -37,23 +35,6 @@ def pipeline(img, R_thresh = (230, 255)):
     combined_binary = np.zeros_like(R_binary)
     combined_binary[(R_binary == 1)] = 1
     return combined_binary
-
-# Make a list to hold the re-drawn lane images
-drawn_images = []
-
-# Load in the re-drawn lane images, appending to drawn_images
-load_drawn_images()
-
-# Make a list to hold the binary thresholded images
-binary_bird = []
-
-# Iterate through each image to threshold it and append to binary_bird
-for image in drawn_images:
-    binary_image = pipeline(image)
-    binary_bird.append(binary_image)
-
-# Make a list to hold the 'labels' - six coefficients, two for each line
-lane_labels = []
 
 def left_line_detect(out_img, leftx_current, margin, minpix, nonzerox, nonzeroy, win_y_low, win_y_high, window_max, counter):
     # Identify left window boundaries
@@ -98,8 +79,11 @@ def lane_detection(image_list):
     The below code is a modified version of my computer vision-based
     Advanced Lane Lines project.
     """
-    for binary_warped in image_list:
-        # Assuming you have created a warped binary image called "binary_warped"
+    for fname in image_list:
+        # Read image
+        img = mpimg.imread(fname)
+        # Binary threshold the image
+        binary_warped = pipeline(img)
         # Make rotations of the original image so histograms can be take of each orientation
         rotation_angle = 20
         left = rotate(binary_warped, rotation_angle)
@@ -201,8 +185,14 @@ def lane_detection(image_list):
         # Append to the labels list
         lane_labels.append(np.append(left_fit, right_fit))
 
+# Load in the re-drawn lane images
+images = load_drawn_images()
+
+# Make a list to hold the 'labels' - six coefficients, two for each line
+lane_labels = []        
+        
 # Run through all the images
-lane_detection(binary_bird)
+lane_detection(images)
 
 # Save the final list to a pickle file for later
 pickle.dump(lane_labels,open('lane_labels.p', "wb" ))
