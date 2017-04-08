@@ -12,7 +12,6 @@ import glob
 import pickle
 import re
 from scipy.ndimage.interpolation import rotate
-from scipy.misc import imresize
 
 def natural_key(string_):
     """See http://www.codinghorror.com/blog/archives/001018.html"""
@@ -86,10 +85,8 @@ def lane_detection(image_list):
         binary_warped = pipeline(img)
         # Make rotations of the original image so histograms can be take of each orientation
         rotation_angle = 20
-        left = rotate(binary_warped, rotation_angle)
-        left = cv2.resize(left, (binary_warped.shape[1], binary_warped.shape[0]))
-        right = rotate(binary_warped, -rotation_angle)     
-        right = cv2.resize(right, (binary_warped.shape[1], binary_warped.shape[0]))
+        left = rotate(binary_warped, rotation_angle, reshape = False)
+        right = rotate(binary_warped, -rotation_angle, reshape = False)     
         
         # Take a histogram of the bottom half of each of the images
         histogram_1 = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
