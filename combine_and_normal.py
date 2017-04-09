@@ -11,7 +11,6 @@ import numpy as np
 import cv2
 import pickle
 from scipy.misc import imresize
-from numpy import newaxis
 from scipy import ndimage
 from sklearn.preprocessing import StandardScaler
 
@@ -24,6 +23,15 @@ train_images = train_images + train_images_curve
 
 # Clear out memory for the unneeded data
 train_images_curve = []
+
+# Downsize, grayscale and normalize training images
+# Note that Keras expects a third dimension, which grayscaling had removed
+for n in range(len(train_images)):
+    new_image = imresize(train_images[n], (45, 80, 3))
+    new_image = cv2.cvtColor(new_image, cv2.COLOR_RGB2GRAY)
+    new_image = new_image[:,:,None]
+    new_image = (new_image / 255) * .8 + 1
+    train_images[n] = new_image
 
 # Load in all labels
 labels = pickle.load(open( "lane_labels.p", "rb" ))
@@ -76,15 +84,6 @@ labels = labels + more_y
 # The below code will normalize the labels by each coefficient.
 label_scaler = StandardScaler()
 labels = label_scaler.fit_transform(labels)
-
-# Downsize, grayscale and normalize training images
-# Note that `newaxis` is needed so Keras receives the dimensions it expects
-for n in range(len(train_images)):
-    new_image = imresize(train_images[n], (45, 80, 3))
-    new_image = cv2.cvtColor(new_image, cv2.COLOR_RGB2GRAY)
-    new_image = new_image[..., newaxis]
-    new_image = (new_image / 255) * .8 + 1
-    train_images[n] = new_image
 
 # Save images, labels, and scaler to pickle files
 # Note that the scaler will be needed to revert predicted labels to normal
