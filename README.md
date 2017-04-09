@@ -19,13 +19,20 @@ Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-C
 * Improved the original neural network substantially by normalizing the labels prior to feeding the network (and reversing the normalization prior to re-drawing the lines after network prediction). See within `combine_and_normal.py`.
 * Improved the lane detection for very curved lines by changing `make_labels.py` to end the detection of a line once it hits the side of the image (the previous version would subsequently only search vertically further, messing up the detection by often crossing the other lane line).
 * Further improved `make_labels.py` to look at two rotations of the image as well, and taking the average histgram of the three images. This helps with a lot of curves or certain perspective transforms where the road lines are not fairly vertical in the image, as the histogram is looking specifically for vertical lines. The big trade-off here is that the file is much slower (around 1 minute previously to almost 15 minutes now). I'll add this as a potential improvement to try other methods of this to re-gain speed; however, given that this is done outside of the true training or usage of the final model it is not a high priority item.
+* Made the `lane_lines.py` file to take in the trained neural network model for perspective transformed images, predict lines, and draw the lines back onto the original image. 
 
 ## Current Status
-I am currently working with the images produced from the `check_labels.py` file to determine which images need further manual work on the redrawn line in order to have an accurate enough label for testing. The vast majority of images from straight or only slight curves do not have additional labelling issues, but extreme curves so far do not produce good labels even after manually re-drawing the lines to assist the computer vision-based model. I have found 446 of the 1,420 images could be improved a little further, a disappointingly high number. Without the curved lines, my neural network currently only generalizes to essentially straight lines. I have now improved the original CV-based lane detection with sliding windows to be better with curves, allowing me to drop from 446 images needing improvement down to 227 images that were unusable.
+My current neural network still generalizes a little too much to either straight lines or only small curves away from straight lines. It works fairly well on very straight paths, but does not do as well on anything more than a slight curve. The current distribution of labels is still fairly centered even after adding some slight rotations to images. I am currently training on 4,341 images but believe I may need to do more generation of additional images for those with extreme curves or similar. I am also working on tuning the neural network.
 
-I also added an additional 568 images to my total by running my original CV-based model on only the curvy road videos (for one image in five, or double the images per second I was initially using, offset by 1 to not use the same images as a second time). Using `check_labels.py` again here made me go from 1,635 images to a usable 568 without further image manipulation.
-
-However, this still left me with a model that could not generalize well enough - looking at histograms of each label's distribution, they are way to centered around straight lines in the middle of the image. So, I am going to add additional images by taking only the images outside of the center of the distribution, slightly rotating them, and adding the rotated images in with the originals. This may cause some issues since the lane line labels are dependent on angle of the lines, but I am hoping the neural network can learn that it is based off of the direction extending out from the car (which does appear slightly at the bottom of each image).
+## Image statistics
+* 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
+* 14,235 of the total that were usable of those gathered (mainly due to blurriness, hidden lines, etc.)
+* 1,420 total images originally extracted from those to account for time series
+* 227 of the 1,420 unusable due to the limits of the CV-based model used to label (down from 446 due to various improvements made to the original model) for a total of 1,193 images
+* Another 568 images (of 1,635 pulled in) gathered from more curvy lines to assist in gaining a wider distribution of labels
+* In total, 1,761 original images
+* After checking histograms for each coefficient of each label, I created an additional 2,580 images using small rotations of the images outside the very center of the original distribution of images (645 images were used in this step, with four rotation changes each).
+* 4,341 total images for training
 
 ## Issues / Challenges so far
 #### General
@@ -48,11 +55,9 @@ The below issues often caused me to have to throw out the image:
 * The CV-based model I am using for initial labeling struggles when lines start under the car at some other angle than vertical - such as often happens with big curves. This leads the model to not start the detection until mid-way up the line, wherein in then tends to think the direction of the line is completely different than actual. Both the CV-based model and my images need to be fiddled with to improve this issue.
 
 ## Upcoming
-* Finish checking the accuracy of each label and fixing as necessary
-* Creation of a second deep neural network to predict lane lines using:
+* [Potential] Creation of a second deep neural network to predict lane lines using:
   * a model that calculates the line prior to perspective transformation - perhaps using a keras crop layer to help focus the neural network's training on the important area of the images (i.e. below the horizon line). This model would *potentially* skip the need to ever perspective transform the original image.
 * Optimization of the above model(s) (parameters, architecture, adding a python generator)
-* Based on which neural network model I choose above, create a file to re-draw the lane lines
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
