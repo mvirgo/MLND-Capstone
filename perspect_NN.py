@@ -49,7 +49,6 @@ model = Sequential()
 # Normalizes incoming inputs. First layer needs the input shape to work
 model.add(BatchNormalization(input_shape=input_shape))
 
-# NOTE: Changing # of layers, type of layers, and all inputs to the layers are fair game for optimization
 # Conv Layer 1
 model.add(Convolution2D(64, 3, 3, border_mode='valid', subsample=(1,1)))
 model.add(Activation('relu'))
@@ -63,7 +62,7 @@ model.add(Activation('relu'))
 model.add(Convolution2D(16, 3, 3, border_mode='valid', subsample=(1,1)))
 model.add(Activation('relu'))
 
-# Conv Layer 3
+# Conv Layer 4
 model.add(Convolution2D(8, 3, 3, border_mode='valid', subsample=(1,1)))
 model.add(Activation('relu'))
 
