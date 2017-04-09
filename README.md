@@ -5,6 +5,8 @@ My capstone project for Udacity's Machine Learning Nanodegree
 
 Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-Capstone-Proposal).
 
+See an early version of the model detecting lane lines [here!](https://youtu.be/ZZAgcSqAU0I)
+
 ## Completed Steps
 * Obtaining driving video
 * Extracting images from video frames (see `load_videos.py`)
@@ -31,8 +33,8 @@ My current neural network still generalizes a little too much to either straight
 * 227 of the 1,420 unusable due to the limits of the CV-based model used to label (down from 446 due to various improvements made to the original model) for a total of 1,193 images
 * Another 568 images (of 1,635 pulled in) gathered from more curvy lines to assist in gaining a wider distribution of labels
 * In total, 1,761 original images
-* After checking histograms for each coefficient of each label, I created an additional 2,580 images using small rotations of the images outside the very center of the original distribution of images (645 images were used in this step, with four rotation changes each).
-* 4,341 total images for training
+* After checking histograms for each coefficient of each label, I created an additional 32,186 images using small rotations of the images outside the very center of the original distribution of images. This was done in three rounds of slowly moving outward from the center of the data (so those further out from the center of the distribution were done multiple times).
+* 33,897 total images for training and validation. Using a generator, this is multiplied by five for over 150,000 training images (using rotation, vertical flips and small shifts in height).
 
 ## Issues / Challenges so far
 #### General
