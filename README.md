@@ -5,7 +5,8 @@ My capstone project for Udacity's Machine Learning Nanodegree
 
 Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-Capstone-Proposal).
 
-See an early version of the model detecting lane lines [here!](https://youtu.be/ZZAgcSqAU0I)
+See an early version of the model detecting lane lines with perspective transformed images [here.](https://youtu.be/ZZAgcSqAU0I)
+Even better - see an early version of my model trained *without* perspective transformed images, i.e. regular road images, [here!](https://www.youtube.com/watch?v=Vq0vlKdyXnI)
 
 ## Completed Steps
 * Obtaining driving video
@@ -22,9 +23,14 @@ See an early version of the model detecting lane lines [here!](https://youtu.be/
 * Improved the lane detection for very curved lines by changing `make_labels.py` to end the detection of a line once it hits the side of the image (the previous version would subsequently only search vertically further, messing up the detection by often crossing the other lane line).
 * Further improved `make_labels.py` to look at two rotations of the image as well, and taking the average histgram of the three images. This helps with a lot of curves or certain perspective transforms where the road lines are not fairly vertical in the image, as the histogram is looking specifically for vertical lines. The big trade-off here is that the file is much slower (around 1 minute previously to almost 15 minutes now). I'll add this as a potential improvement to try other methods of this to re-gain speed; however, given that this is done outside of the true training or usage of the final model it is not a high priority item.
 * Made the `lane_lines.py` file to take in the trained neural network model for perspective transformed images, predict lines, and draw the lines back onto the original image. 
+* Created and trained a neural network (see `road_NN.py`) capable of detecting lane lines on road images without perspective transformation. 
 
 ## Current Status
-I have made a model that does decently on the training videos when perspective transformed, but so far does not generalize well enough to different video sources (such as Udacity's videos compared to my own). I will continue to work on improving this. Also, I am going to attempt making a model that does not need any perspective transformation, which may help in generalizing to Udacity's videos.
+I have made two models, one with perspective transformation for training images and one without it, that does decently on the training videos, but so far does not generalize well enough to different video sources (such as Udacity's videos compared to my own). Some of this, I believe, is due to the limits of me using a single perspective transformation in my CV-based model for initial labeling of images - the model is essentially stuck to that transformation (which still affects the non-perspective transformed model since that is how the labels were made). Also, even when the model correctly detects the lines, the current method of drawing the "lane" back onto the images uses a perspective transform on a blank image that might not work for the given image, due to differences in horizon line, which are especially apparent in hilly areas. 
+
+I am going to attempt to see if I can train the model to also identify the most efficient perspective transformation for a given image - which may mean I have to go back and re-do my labels with these specific transformations. This would be especially helpful in using images from different datasets, such as Udacity's project videos - they need a different perspective transform both for initially relabeling as well as to draw down the lines. Without it, the lines would be drawn in a space at a weird angle above the lane, even if the model determines the lane lines correctly.
+
+If this does not work, I will have to continue to see whether I have a diverse enough dataset to help it generalize better.
 
 ## Image statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
@@ -57,9 +63,7 @@ The below issues often caused me to have to throw out the image:
 * The CV-based model I am using for initial labeling struggles when lines start under the car at some other angle than vertical - such as often happens with big curves. This leads the model to not start the detection until mid-way up the line, wherein in then tends to think the direction of the line is completely different than actual. Both the CV-based model and my images need to be fiddled with to improve this issue.
 
 ## Upcoming
-* [Potential] Creation of a second deep neural network to predict lane lines using:
-  * a model that calculates the line prior to perspective transformation - perhaps using a keras crop layer to help focus the neural network's training on the important area of the images (i.e. below the horizon line). This model would *potentially* skip the need to ever perspective transform the original image.
-* Optimization of the above model(s) (parameters, architecture, adding a python generator)
+* Further work on input data to improve generalization, including potentially on training detection of the necessary transformation needed to draw down the lines (to help with the lane detection going above the horizon, for instance).
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
