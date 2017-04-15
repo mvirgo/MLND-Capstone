@@ -30,7 +30,7 @@ I have made two models, one with perspective transformation for training images 
 
 I am going to attempt to see if I can train the model to also identify the most efficient perspective transformation for a given image - which may mean I have to go back and re-do my labels with these specific transformations. This would be especially helpful in using images from different datasets, such as Udacity's project videos - they need a different perspective transform both for initially relabeling as well as to draw down the lines. Without it, the lines would be drawn in a space at a weird angle above the lane, even if the model determines the lane lines correctly.
 
-If this does not work, I will have to continue to see whether I have a diverse enough dataset to help it generalize better.
+I am also investigating how to return class activation maps - essentially, where the neural network is looking to determine its output. Theoretically, if the neural network is truly looking at the lane lines to predict the output labels, I could actually use the activated portions of each image to calculate a *better* line label (potentially solving issues with curves, perspective transformation of the lane drawing back to the original, and generalization to other video sources).
 
 ## Image statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
