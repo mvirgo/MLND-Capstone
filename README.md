@@ -24,13 +24,15 @@ Even better - see an early version of my model trained *without* perspective tra
 * Further improved `make_labels.py` to look at two rotations of the image as well, and taking the average histgram of the three images. This helps with a lot of curves or certain perspective transforms where the road lines are not fairly vertical in the image, as the histogram is looking specifically for vertical lines. The big trade-off here is that the file is much slower (around 1 minute previously to almost 15 minutes now). I'll add this as a potential improvement to try other methods of this to re-gain speed; however, given that this is done outside of the true training or usage of the final model it is not a high priority item.
 * Made the `lane_lines.py` file to take in the trained neural network model for perspective transformed images, predict lines, and draw the lines back onto the original image. 
 * Created and trained a neural network (see `road_NN.py`) capable of detecting lane lines on road images without perspective transformation. 
+* Using keras-vis (see documentation [here](https://raghakot.github.io/keras-vis/), created activation heatmaps by layer in order to see whether the model was looking in the correct place for the lines. See `layer_visualize.ipynb` for more.
 
 ## Current Status
-I have made two models, one with perspective transformation for training images and one without it, that does decently on the training videos, but so far does not generalize well enough to different video sources (such as Udacity's videos compared to my own). Some of this, I believe, is due to the limits of me using a single perspective transformation in my CV-based model for initial labeling of images - the model is essentially stuck to that transformation (which still affects the non-perspective transformed model since that is how the labels were made). Also, even when the model correctly detects the lines, the current method of drawing the "lane" back onto the images uses a perspective transform on a blank image that might not work for the given image, due to differences in horizon line, which are especially apparent in hilly areas. 
+Using keras-vis, I am able to visualize where exactly the neural network is looking for the lines - which could prove extremely important at re-drawing the lane lines. In my Advanced Lane Lines project with the CV-based model, we still had to use the same perspective transformation matrix to transform the drawn lines after detection back into the image's plane of view. This poses a problem with my own neural network, whereby changes in the horizon or different camera angles vertically could cause the re-drawing of the lines to be off. 
 
-I am going to attempt to see if I can train the model to also identify the most efficient perspective transformation for a given image - which may mean I have to go back and re-do my labels with these specific transformations. This would be especially helpful in using images from different datasets, such as Udacity's project videos - they need a different perspective transform both for initially relabeling as well as to draw down the lines. Without it, the lines would be drawn in a space at a weird angle above the lane, even if the model determines the lane lines correctly.
-
-I am also investigating how to return class activation maps - essentially, where the neural network is looking to determine its output. Theoretically, if the neural network is truly looking at the lane lines to predict the output labels, I could actually use the activated portions of each image to calculate a *better* line label (potentially solving issues with curves, perspective transformation of the lane drawing back to the original, and generalization to other video sources).
+I could actually use the activated portions of each image to re-draw the lines, or potentially even calculate a better line fit. Here are some of the visualizations of layers off of an example image, from the activations within my full road image neural network.
+![Ex1](/vis_pics/orig_four_five.png)
+![Ex2](/vis_pics/six_seven_eight.png)
+![Ex3](/vis_pics/nine_ten.png)
 
 ## Image statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
@@ -63,7 +65,7 @@ The below issues often caused me to have to throw out the image:
 * The CV-based model I am using for initial labeling struggles when lines start under the car at some other angle than vertical - such as often happens with big curves. This leads the model to not start the detection until mid-way up the line, wherein in then tends to think the direction of the line is completely different than actual. Both the CV-based model and my images need to be fiddled with to improve this issue.
 
 ## Upcoming
-* Further work on input data to improve generalization, including potentially on training detection of the necessary transformation needed to draw down the lines (to help with the lane detection going above the horizon, for instance).
+* Further work on input data to improve generalization, including utilization of activation heatmaps to improve either re-drawing the detected lanes or even calculating better lane labels.
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
