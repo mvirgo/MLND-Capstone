@@ -27,12 +27,11 @@ Even better - see an early version of my model trained *without* perspective tra
 * Using keras-vis (see documentation [here](https://raghakot.github.io/keras-vis/), created activation heatmaps by layer in order to see whether the model was looking in the correct place for the lines. See `layer_visualize.ipynb` for more.
 
 ## Current Status
-Using keras-vis, I am able to visualize where exactly the neural network is looking for the lines - which could prove extremely important at re-drawing the lane lines. In my Advanced Lane Lines project with the CV-based model, we still had to use the same perspective transformation matrix to transform the drawn lines after detection back into the image's plane of view. This poses a problem with my own neural network, whereby changes in the horizon or different camera angles vertically could cause the re-drawing of the lines to be off. 
+I have attempted to use activation heatmaps from keras-vis to show exactly where the lane lines are, and actually found a way to make it fairly good at detecting lines. However, this method is SLOW, and still has some issues with certain conditions (yellow lines on lighter roads are not detected at all). 
 
-I could actually use the activated portions of each image to re-draw the lines, or potentially even calculate a better line fit. Here are some of the visualizations of layers off of an example image, from the activations within my full road image neural network.
-![Ex1](/vis_pics/orig_four_five.png)
-![Ex2](/vis_pics/six_seven_eight.png)
-![Ex3](/vis_pics/nine_ten.png)
+I used transfer learning from my Behavioral Cloning project (dropping the final layer to train on my six labels), which helped improve the markings as that model had already been trained to look for the road. However, I've found that any type of image augmentation (rotation, shifts, etc.) causes the model to activate in too many places, making the activation maps less effective.
+
+I believe I am unfortunately going to have to completely change my approach. My thought is that I could train a neural network using small image segments of road lines and non-road lines, and then use a sliding window technique similar to how I did vehicle detection in another project. The downside to this is I will have to completely reprocess my image data.
 
 ## Image statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
