@@ -27,11 +27,9 @@ Even better - see an early version of my model trained *without* perspective tra
 * Using keras-vis (see documentation [here](https://raghakot.github.io/keras-vis/), created activation heatmaps by layer in order to see whether the model was looking in the correct place for the lines. See `layer_visualize.ipynb` for more.
 
 ## Current Status
-I have attempted to use activation heatmaps from keras-vis to show exactly where the lane lines are, and actually found a way to make it fairly good at detecting lines. However, this method is SLOW, and still has some issues with certain conditions (yellow lines on lighter roads are not detected at all). 
+My preferred approach at this point is to try using a fully convolutional neural network, whereby I feed in a road image, and output the lane to be drawn back onto the original image in a separate image. I am in the process of building and training this network.
 
-I used transfer learning from my Behavioral Cloning project (dropping the final layer to train on my six labels), which helped improve the markings as that model had already been trained to look for the road. However, I've found that any type of image augmentation (rotation, shifts, etc.) causes the model to activate in too many places, making the activation maps less effective.
-
-I believe I am unfortunately going to have to completely change my approach. My thought is that I could train a neural network using small image segments of road lines and non-road lines, and then use a sliding window technique similar to how I did vehicle detection in another project. The downside to this is I will have to completely reprocess my image data.
+If that fails, my second thought is that I could train a neural network using small image segments of road lines and non-road lines, and then use a sliding window technique similar to how I did vehicle detection in another project. The downside to this is I will have to completely reprocess my image data.
 
 ## Image statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
@@ -46,6 +44,11 @@ I believe I am unfortunately going to have to completely change my approach. My 
 ## Issues / Challenges so far
 #### General
 * File ordering - using `glob.glob` does not pull in images in a natural counting fashion. I needed to add in an additional function (see Lines 13-16 in `load_road_images.py`) to get it to pull the images in normally. This is crucial to make sure the labelling is matched up with the same image later on so that it is easier for me to know which image is causing issues (especially in the `make_labels.py` file, which fails if it cannot detect the line).
+
+#### Model
+* The initial model I chose had issues due to perspective transformation still being used to re-draw the lines - if the horizon line changed, or if a different camera was used (needing a different transformation), the lines would look off even if the shape was fairly correct.
+* I tried to fix the above issue by using keras-vis activation heatmaps, but found these were too slow (especially given different images had heatmaps with differing issues - some learned the label off of only one of the lines [curves], or learned from the road space instead of the line specifically [straights]), or could not generalize well enough for which layer heatmap to use.
+* I also used transfer learning for the above issue from my Behavioral Cloning project, but the model paid more attention to the entire road surface as opposed to the lane lines themselves.
 
 #### Images
 The below issues often caused me to have to throw out the image:
@@ -64,7 +67,7 @@ The below issues often caused me to have to throw out the image:
 * The CV-based model I am using for initial labeling struggles when lines start under the car at some other angle than vertical - such as often happens with big curves. This leads the model to not start the detection until mid-way up the line, wherein in then tends to think the direction of the line is completely different than actual. Both the CV-based model and my images need to be fiddled with to improve this issue.
 
 ## Upcoming
-* Further work on input data to improve generalization, including utilization of activation heatmaps to improve either re-drawing the detected lanes or even calculating better lane labels.
+* Training a fully convolutional network to potentially create the lane "drawing" to place onto the original image.
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
