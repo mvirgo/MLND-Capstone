@@ -25,9 +25,10 @@ Even better - see an early version of my model trained *without* perspective tra
 * Made the `lane_lines.py` file to take in the trained neural network model for perspective transformed images, predict lines, and draw the lines back onto the original image. 
 * Created and trained a neural network (see `road_NN.py`) capable of detecting lane lines on road images without perspective transformation. 
 * Using keras-vis (see documentation [here](https://raghakot.github.io/keras-vis/), created activation heatmaps by layer in order to see whether the model was looking in the correct place for the lines. See `layer_visualize.ipynb` for more.
+* Created an unoptimized fully convolutional neural network, whereby a regular road image is fed into the network and the expected lane to be drawn (as opposed to just the specific lane coefficients) is returned. See `fully_conv_NN.py`.
 
 ## Current Status
-My preferred approach at this point is to try using a fully convolutional neural network, whereby I feed in a road image, and output the lane to be drawn back onto the original image in a separate image. I am in the process of building and training this network.
+My preferred approach at this point is to try using a fully convolutional neural network, whereby I feed in a road image, and output the lane to be drawn back onto the original image in a separate image. I have now built a basic structure for the network (I actually did not previously know how to create a fully convolutional neural network, having only previously used NN's that ended with fully connected layers), and am in the process of further optimizing & training it to appropriately draw back down the detected lane.
 
 If that fails, my second thought is that I could train a neural network using small image segments of road lines and non-road lines, and then use a sliding window technique similar to how I did vehicle detection in another project. The downside to this is I will have to completely reprocess my image data.
 
@@ -67,7 +68,7 @@ The below issues often caused me to have to throw out the image:
 * The CV-based model I am using for initial labeling struggles when lines start under the car at some other angle than vertical - such as often happens with big curves. This leads the model to not start the detection until mid-way up the line, wherein in then tends to think the direction of the line is completely different than actual. Both the CV-based model and my images need to be fiddled with to improve this issue.
 
 ## Upcoming
-* Training a fully convolutional network to potentially create the lane "drawing" to place onto the original image.
+* Improvement of my fully convolutional network that directly re-draws the detected lane back onto the road image.
 * Compare the original CV-based lane line model's loss with the neural network's (based on the improved labels from the manual drawn lines)
 * Additionally, compare the speed of the original CV-based lane line model vs. the neural network
 * Assess the performance of the neural network on additional videos (such as Challenge videos in the Udacity Advanced Lane Lines project)
