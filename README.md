@@ -34,7 +34,7 @@ You can download the full training set of images I used [here](https://www.dropb
 * Created a fully convolutional neural network, whereby a regular road image is fed into the network and the expected lane to be drawn (as opposed to just the specific lane coefficients) is returned. See `fully_conv_NN.py`.
 * Made the file to re-draw the lanes based off the model's predictions. See `draw_detected_lanes.py`.
 * Compared the performance of my model to the previous CV-based one. The CNN is much more robust, and can work in a wider variety of situations - the Challenge video essentially failed completely with my CV-based model.
-* Compared the speed of the CNN vs. the CV model. The CNN model is nearly real-time, generating between 25-29 frames each second for a 30 fps video. This is significantly faster than the CV model. 
+* Compared the speed of the CNN vs. the CV model. The CNN model is nearly real-time, generating between 25-29 frames each second for a 30 fps video. This is significantly faster than the CV model, which only managed 4.5 fps generated. Note that this speed increase is dependent on GPU acceleration - without GPU, the speed is roughly 5.5 fps generated, which is still an improvement, but by much less.
 
 ## Current Status
 I am finally getting to the wrap-up stage! I have now created a robust fully convolutional neural network which can detect lane lines in videos it has never seen before, and is faster than my previous pure computer vision-based model. I am working on cleaning up some files as well as on preparing the final project write-up.
