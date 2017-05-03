@@ -1,15 +1,11 @@
-""" This file contains code for a preliminary fully
-convolutional (i.e. contains zero fully connected layers)
-neural network for detecting lanes. Note that improved
-versions of this should also contain additional batch
-normalization and dropout to assist with training and to
-avoid overfitting. This current version assumes the inputs
+""" This file contains code for a fully convolutional
+(i.e. contains zero fully connected layers) neural network
+for detecting lanes. This version assumes the inputs
 to be road images in the shape of 80 x 160 x 3 (RGB) with
 the labels as 80 x 160 x 1 (just the G channel with a
 re-drawn lane). Note that in order to view a returned image,
-I will stack the prediction with zero'ed R and B layers
-and add it to the initial road image. Input and output
-shapes are also subject to further experimentation.
+the predictions is later stacked with zero'ed R and B layers
+and added back to the initial road image.
 """
 
 import numpy as np
@@ -34,6 +30,9 @@ labels = pickle.load(open("full_CNN_labels.p", "rb" ))
 train_images = np.array(train_images)
 labels = np.array(labels)
 
+# Normalize labels - training images get normalized to start in the network
+labels = labels / 255
+
 # Shuffle images along with their labels, then split into training/validation sets
 train_images, labels = shuffle(train_images, labels)
 # Test size may be 10% or 20%
@@ -41,11 +40,11 @@ X_train, X_val, y_train, y_val = train_test_split(train_images, labels, test_siz
 
 # Batch size, epochs and pool size below are all paramaters to fiddle with for optimization
 batch_size = 150
-epochs = 10
+epochs = 20
 pool_size = (2, 2)
 input_shape = X_train.shape[1:]
 
-# Here is the actual neural network
+### Here is the actual neural network ###
 model = Sequential()
 # Normalizes incoming inputs. First layer needs the input shape to work
 model.add(BatchNormalization(input_shape=input_shape))
@@ -118,9 +117,12 @@ model.add(Deconvolution2D(60, 3, 3, border_mode='valid', subsample=(1,1), activa
 model.add(Deconvolution2D(1, 3, 3, border_mode='valid', subsample=(1,1), activation = 'relu', 
                           output_shape = model.layers[0].output_shape, name = 'Final'))
 
+### End of network ###
 
-# Using a generator to help the model generalize/train better
-datagen = ImageDataGenerator(rotation_range = 10, vertical_flip = True, height_shift_range = .1, width_shift_range = .1, channel_shift_range = .1)
+
+# Using a generator to help the model use less data
+# I found NOT using any image augmentation here surprisingly yielded significantly better results
+datagen = ImageDataGenerator()
 datagen.fit(X_train)
 
 # Compiling and training the model
@@ -130,10 +132,10 @@ model.fit_generator(datagen.flow(X_train, y_train, batch_size=batch_size), sampl
 
 # Save model architecture and weights
 model_json = model.to_json()
-with open("fully_conv_model.json", "w") as json_file:
+with open("full_CNN_model.json", "w") as json_file:
     json_file.write(model_json)
 
-model.save_weights('fully_conv_model.h5')
+model.save_weights('full_CNN_model.h5')
 
 # Show summary of model
 model.summary()
