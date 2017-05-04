@@ -3,7 +3,7 @@ My capstone project for Udacity's Machine Learning Nanodegree
 
 #### This project is in progress. I will be updating this repository with steps I have taken so far as well as current status and future updates needed. The project is now in the final stages and I hope to have it completed shortly.
 
-Please see my original capstone proposal [here](https://github.com/mvirgo/MLND-Capstone-Proposal).
+Please see my original capstone proposal [here](proposal.pdf).
 
 See an early version of the model detecting lane lines with perspective transformed images [here.](https://youtu.be/ZZAgcSqAU0I)
 An early version of my model trained *without* perspective transformed images, i.e. regular road images, can be seen [here!](https://www.youtube.com/watch?v=Vq0vlKdyXnI)
