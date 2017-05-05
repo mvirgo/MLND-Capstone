@@ -1,0 +1,222 @@
+name: carnd-term1
+channels:
+- menpo
+- conda-forge
+- defaults
+dependencies:
+- backports.shutil_get_terminal_size=1.0.0=py35_0
+- blas=1.1=openblas
+- ca-certificates=2016.9.26=0
+- certifi=2016.9.26=py35_0
+- click=6.6=py35_0
+- cycler=0.10.0=py35_0
+- decorator=4.0.10=py35_0
+- entrypoints=0.2.2=py35_0
+- eventlet=0.19.0=py35_0
+- flask=0.11.1=py35_0
+- flask-socketio=2.7.1=py35_0
+- gettext=0.19.7=1
+- glib=2.51.0=2
+- hdf5=1.8.17=8
+- icu=56.1=4
+- idna=2.1=py35_0
+- ipykernel=4.5.2=py35_0
+- ipython=5.1.0=py35_1
+- ipython_genutils=0.1.0=py35_0
+- itsdangerous=0.24=py35_0
+- jinja2=2.8=py35_1
+- jpeg=9b=0
+- jsonschema=2.5.1=py35_0
+- jupyter_client=4.4.0=py35_0
+- jupyter_console=5.0.0=py35_0
+- jupyter_core=4.2.1=py35_0
+- libffi=3.2.1=3
+- libiconv=1.14=4
+- libpng=1.6.26=0
+- libsodium=1.0.10=0
+- libtiff=4.0.6=7
+- libxml2=2.9.4=3
+- markupsafe=0.23=py35_1
+- mistune=0.7.3=py35_0
+- nbconvert=4.2.0=py35_0
+- nbformat=4.2.0=py35_0
+- ncurses=5.9=10
+- networkx=1.11=py35_0
+- notebook=4.3.1=py35_0
+- openblas=0.2.19=0
+- openssl=1.0.2h=3
+- pandas=0.19.2=np111py35_1
+- patsy=0.4.1=py35_0
+- pcre=8.39=0
+- pexpect=4.2.1=py35_0
+- pickleshare=0.7.3=py35_0
+- pip=9.0.1=py35_0
+- prompt_toolkit=1.0.9=py35_0
+- ptyprocess=0.5.1=py35_0
+- pyasn1=0.1.9=py35_0
+- pycparser=2.17=py35_0
+- pygments=2.1.3=py35_1
+- pyopenssl=16.0.0=py35_0
+- pyparsing=2.1.10=py35_0
+- pyqt=4.11.4=py35_2
+- python=3.5.2=3
+- python-dateutil=2.6.0=py35_0
+- python-engineio=1.0.0=py35_0
+- python-socketio=1.5.1=py35_0
+- pytz=2016.10=py35_0
+- pyzmq=16.0.2=py35_0
+- qtconsole=4.2.1=py35_0
+- readline=6.2=0
+- scikit-image=0.12.3=np111py35_0
+- scikit-learn=0.18=np111py35_blas_openblas_203
+- scipy=0.18.1=np111py35_blas_openblas_201
+- seaborn=0.7.1=py35_0
+- setuptools=32.3.0=py35_0
+- simplegeneric=0.8.1=py35_0
+- sip=4.18=py35_1
+- six=1.10.0=py35_1
+- sqlite=3.13.0=1
+- statsmodels=0.6.1=np111py35_0
+- terminado=0.6=py35_0
+- tk=8.5.19=1
+- tornado=4.4.2=py35_0
+- traitlets=4.3.0=py35_0
+- wcwidth=0.1.7=py35_0
+- werkzeug=0.11.10=py35_0
+- wheel=0.29.0=py35_0
+- xz=5.2.2=0
+- zeromq=4.1.5=0
+- zlib=1.2.8=3
+- cairo=1.12.18=6
+- cffi=1.9.1=py35_0
+- cryptography=1.7.1=py35_0
+- fontconfig=2.11.1=6
+- freetype=2.5.5=1
+- greenlet=0.4.11=py35_0
+- h5py=2.6.0=np111py35_2
+- harfbuzz=0.9.39=1
+- jupyter=1.0.0=py35_3
+- libgfortran=3.0.0=1
+- matplotlib=1.5.1=np111py35_0
+- mkl=11.3.3=0
+- numpy=1.11.2=py35_0
+- pango=1.39.0=0
+- pillow=4.0.0=py35_0
+- pixman=0.32.6=0
+- qt=4.8.7=4
+- ipywidgets=5.1.5=py35_0
+- opencv3=3.1.0=py35_0
+- widgetsnbextension=1.2.3=py35_1
+- pip:
+  - actionlib==1.11.7
+  - backports.shutil-get-terminal-size==1.0.0
+  - bondpy==1.7.18
+  - camera-calibration==1.12.19
+  - camera-calibration-parsers==1.11.12
+  - catkin==0.6.19
+  - cv-bridge==1.11.15
+  - diagnostic-analysis==1.8.10
+  - diagnostic-common-diagnostics==1.8.10
+  - diagnostic-updater==1.8.10
+  - dynamic-reconfigure==1.5.46
+  - gencpp==0.5.5
+  - genlisp==0.4.15
+  - genmsg==0.5.8
+  - genpy==0.5.10
+  - graphviz==0.5.2
+  - image-geometry==1.11.15
+  - imageio==2.1.1
+  - interactive-markers==1.11.3
+  - ipython-genutils==0.1.0
+  - jupyter-client==4.4.0
+  - jupyter-console==5.0.0
+  - jupyter-core==4.2.1
+  - keras==2.0.4
+  - keras-vis==0.2
+  - laser-geometry==1.6.4
+  - message-filters==1.11.21
+  - moviepy==0.2.2.11
+  - olefile==0.44
+  - pluginlib==1.10.4
+  - prompt-toolkit==1.0.9
+  - protobuf==3.1.0.post1
+  - pydot==1.2.3
+  - pydot-ng==1.0.0
+  - python-qt-binding==0.2.19
+  - pyyaml==3.12
+  - qt-dotgraph==0.2.32
+  - qt-gui==0.2.32
+  - qt-gui-cpp==0.2.32
+  - qt-gui-py-common==0.2.32
+  - resource-retriever==1.11.8
+  - rosbag==1.11.21
+  - rosboost-cfg==1.11.14
+  - rosclean==1.11.14
+  - roscreate==1.11.14
+  - rosgraph==1.11.21
+  - roslaunch==1.11.21
+  - roslib==1.11.14
+  - roslint==0.10.0
+  - roslz4==1.11.21
+  - rosmake==1.11.14
+  - rosmaster==1.11.21
+  - rosmsg==1.11.21
+  - rosnode==1.11.21
+  - rosparam==1.11.21
+  - rospy==1.11.21
+  - rosservice==1.11.21
+  - rostest==1.11.21
+  - rostopic==1.11.21
+  - rosunit==1.11.14
+  - roswtf==1.11.21
+  - rqt-action==0.4.7
+  - rqt-bag==0.4.7
+  - rqt-bag-plugins==0.4.7
+  - rqt-console==0.4.7
+  - rqt-dep==0.4.7
+  - rqt-graph==0.4.7
+  - rqt-gui==0.2.14
+  - rqt-gui-py==0.2.14
+  - rqt-image-view==0.4.7
+  - rqt-launch==0.4.7
+  - rqt-logger-level==0.4.7
+  - rqt-moveit==0.5.6
+  - rqt-msg==0.4.7
+  - rqt-nav-view==0.5.6
+  - rqt-plot==0.4.7
+  - rqt-pose-view==0.5.6
+  - rqt-publisher==0.4.7
+  - rqt-py-common==0.4.7
+  - rqt-py-console==0.4.7
+  - rqt-reconfigure==0.4.7
+  - rqt-robot-dashboard==0.5.6
+  - rqt-robot-monitor==0.5.6
+  - rqt-robot-steering==0.5.6
+  - rqt-runtime-monitor==0.5.6
+  - rqt-rviz==0.5.6
+  - rqt-service-caller==0.4.7
+  - rqt-shell==0.4.7
+  - rqt-srv==0.4.7
+  - rqt-tf-tree==0.5.6
+  - rqt-top==0.4.7
+  - rqt-topic==0.4.7
+  - rqt-web==0.4.7
+  - rviz==1.11.15
+  - sensor-msgs==1.11.9
+  - smach==2.0.0
+  - smach-ros==2.0.0
+  - smclib==1.7.18
+  - tensorflow==0.12.1
+  - tensorflow-gpu==0.12.1
+  - tf==1.11.8
+  - tf-conversions==1.11.8
+  - tf2-geometry-msgs==0.5.15
+  - tf2-kdl==0.5.15
+  - tf2-py==0.5.15
+  - tf2-ros==0.5.15
+  - tf2-sensor-msgs==0.5.15
+  - theano==0.9.0
+  - tqdm==4.10.0
+  - xacro==1.9.5
+prefix: /home/michael/anaconda3/envs/carnd-term1
+
