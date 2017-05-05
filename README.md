@@ -17,7 +17,25 @@ An additional video can be seen at [this Dropbox link.](https://www.dropbox.com/
 You can download the full training set of images I used [here](https://www.dropbox.com/s/rrh8lrdclzlnxzv/full_CNN_train.p?dl=0) (**NOTE:** this is 468 MB!) and the full set of 'labels' (which are just the 'G' channel from an RGB image of a re-drawn lane with an extra dimension added to make use in Keras easier) [here](https://www.dropbox.com/s/ak850zqqfy6ily0/full_CNN_labels.p?dl=0) (157 MB). 
 
 ## Software Requirements
-**PENDING**
+* Python 3.5 or higher. Most of the included code also works in Python 2.7, although the pickle files used for the training images and labels are encoded for use in Python 3 and would need to be loaded and restructured to work in Python 2.7. I would suggest downloading with Anaconda as you will get some of the below
+* TensorFlow - Suggested to download TensorFlow GPU for best performance
+* Keras
+* OpenCV (known as cv2 once downloaded) - opencv-python if installing from command line
+* h5py
+* imageio
+* matplotlib
+* moviepy
+* numpy+mkl
+* scikit-learn
+* scipy
+
+**Note: Depending on which versions of the above are downloaded, there may be an issue in moviepy when trying to generate the video file from `draw_detected_lanes.py`. If so, please navigate to the following on your computer (if using Anaconda): `Anaconda3/Lib/site-packages/moviepy/audio/io/readers.py`, and go to line 122, which should be changed to `reshape((int(len(result)/self.nchannels),`, i.e. adding to change the result of the division to an integer. I will also add a link to a conda environment in the near future in case that's easier.**
+
+## Key Files
+Although I have included many of the python files I created to help process my images and various prototype neural networks, the key files are:
+* [fully_conv_NN.py](fully_conv_NN.py) - Assuming you have downloaded the training images and labels above, this is the fully convolutional neural network to train using that data.
+* [full_CNN_model.json](full_CNN_model.json) & [full_CNN_model.h5](full_CNN_model.h5) - These are the final outputs from the above CNN. Note that if you train the file above the originals here will be overwritten! These get fed into the below.
+* [draw_detected_lanes.py](draw_detected_lanes.py) - Using the trained model and an input video, this predicts the lane, averages across 5 frames, and returns the original video with predicted lane lines drawn onto it. Note that it is currently set up to use the basic video from Udacity's SDCND Advanced Lane Lines project [here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/project_video.mp4), but the code at the end can be changed to accept different input videos.
 
 ## Current Status
 I am finally getting to the wrap-up stage! I have now created a robust fully convolutional neural network which can detect lane lines in videos it has never seen before, and is faster than my previous pure computer vision-based model. I am working on cleaning up some files as well as on preparing the final project write-up.
