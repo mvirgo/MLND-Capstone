@@ -1,11 +1,14 @@
 # MLND-Capstone
 My capstone project for Udacity's Machine Learning Nanodegree
 
-#### This project is in progress. I will be updating this repository with steps I have taken so far as well as current status and future updates needed. The project is now in the final stages and I hope to have it completed shortly.
+### Lane Detection with Deep Learning
+In this project, I use a deep learning-based approach to improve upon lane detection. My final model uses a fully convolutional neural network to output an image of a predicted lane.
 
-Please see my original capstone proposal [here](proposal.pdf).
+Please see my final Capstone Project Report [here](MLND%20Capstone%20Project%20Report.pdf).
 
-Also, see the wiki page [in this repository](https://github.com/mvirgo/MLND-Capstone/wiki) to see some more of my steps along the way.
+Also, see my original capstone proposal [here](proposal.pdf).
+
+Lastly, check out the wiki page [in this repository](https://github.com/mvirgo/MLND-Capstone/wiki) to see some more of my steps along the way.
 
 See an early version of the model detecting lane lines with perspective transformed images [here.](https://youtu.be/ZZAgcSqAU0I)
 An early version of my model trained *without* perspective transformed images, i.e. regular road images, can be seen [here!](https://www.youtube.com/watch?v=Vq0vlKdyXnI)
@@ -14,6 +17,7 @@ Lastly, with the finalized fully convolutional model, there are a couple additio
 
 An additional video can be seen at [this Dropbox link.](https://www.dropbox.com/s/18jia2x9pg42s4n/proj_reg_vid.mp4?dl=0)
 
+## Dataset
 You can download the full training set of images I used [here](https://www.dropbox.com/s/rrh8lrdclzlnxzv/full_CNN_train.p?dl=0) (**NOTE:** this is 468 MB!) and the full set of 'labels' (which are just the 'G' channel from an RGB image of a re-drawn lane with an extra dimension added to make use in Keras easier) [here](https://www.dropbox.com/s/ak850zqqfy6ily0/full_CNN_labels.p?dl=0) (157 MB). 
 
 ## Software Requirements
@@ -40,9 +44,6 @@ Although I have included many of the python files I created to help process my i
 * [full_CNN_model.json](full_CNN_model.json) & [full_CNN_model.h5](full_CNN_model.h5) - These are the final outputs from the above CNN. Note that if you train the file above the originals here will be overwritten! These get fed into the below.
 * [draw_detected_lanes.py](draw_detected_lanes.py) - Using the trained model and an input video, this predicts the lane, averages across 5 frames, and returns the original video with predicted lane lines drawn onto it. Note that it is currently set up to use the basic video from Udacity's SDCND Advanced Lane Lines project [here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/project_video.mp4), but the code at the end can be changed to accept different input videos.
 
-## Current Status
-I am finally getting to the wrap-up stage! I have now created a robust fully convolutional neural network which can detect lane lines in videos it has never seen before, and is faster than my previous pure computer vision-based model. I am working on cleaning up some files as well as on preparing the final project write-up.
-
 ## Training Image Statistics
 * 21,054 total images gathered from 12 videos (a mix of different times of day, weather, traffic, and road curvatures)
 * 17.4% were clear night driving, 16.4% were rainy morning driving, and 66.2% were cloudy afternoon driving
@@ -57,6 +58,3 @@ I am finally getting to the wrap-up stage! I have now created a robust fully con
 * A total of 1,978 actual images used between my collections and the one Udacity video
 * After checking histograms for each coefficient of each label for distribution, I created an additional 4,404 images using small rotations of the images outside the very center of the original distribution of images. This was done in three rounds of slowly moving outward from the center of the data (so those further out from the center of the distribution were done multiple times). 6,382 images existed at this point.
 * Finally, I added horizontal flips of each and every road image and its corresponding label, which doubled the total images. All in all, there were a total of 12,764 images for training.
-
-## Upcoming
-* Complete final project write-up
