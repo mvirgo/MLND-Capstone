@@ -89,9 +89,9 @@ def lane_detection(image_list):
         right = rotate(binary_warped, -rotation_angle, reshape = False)     
         
         # Take a histogram of the bottom half of each of the images
-        histogram_1 = np.sum(binary_warped[binary_warped.shape[0]/2:,:], axis=0)
-        histogram_2 = np.sum(left[left.shape[0]/2:,:], axis=0)
-        histogram_3 = np.sum(right[right.shape[0]/2:,:], axis=0)
+        histogram_1 = np.sum(binary_warped[int(binary_warped.shape[0]/2):,:], axis=0)
+        histogram_2 = np.sum(left[int(left.shape[0]/2):,:], axis=0)
+        histogram_3 = np.sum(right[int(right.shape[0]/2):,:], axis=0)
         
         # Stack and average these three histograms
         histogram = np.stack((histogram_1, histogram_2, histogram_3))
