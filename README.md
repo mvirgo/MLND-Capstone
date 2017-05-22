@@ -18,6 +18,8 @@ Lastly, with the finalized fully convolutional model, there are a couple additio
 An additional video can be seen at [this Dropbox link.](https://www.dropbox.com/s/18jia2x9pg42s4n/proj_reg_vid.mp4?dl=0)
 
 ## Dataset
+**If you downloaded this dataset prior to 5/22/17, please re-download it. The original that I posted did not include proper horizontal flipping of the images and labels.**
+
 You can download the full training set of images I used [here](https://www.dropbox.com/s/rrh8lrdclzlnxzv/full_CNN_train.p?dl=0) (**NOTE:** this is 468 MB!) and the full set of 'labels' (which are just the 'G' channel from an RGB image of a re-drawn lane with an extra dimension added to make use in Keras easier) [here](https://www.dropbox.com/s/ak850zqqfy6ily0/full_CNN_labels.p?dl=0) (157 MB). 
 
 ## Software Requirements
