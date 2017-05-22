@@ -70,8 +70,8 @@ def horiz_flip(train_images, pic_labels):
 
     # Flip images horizontally - note that doing so in the keras generator would not flip labels
     for i in range(len(train_images)):
-        more_X.append(np.fliplr(train_images[n]))
-        more_y.append(np.fliplr(pic_labels[n]))
+        more_X.append(np.fliplr(train_images[i]))
+        more_y.append(np.fliplr(pic_labels[i]))
 
     # Combine the old training images and labels with the new data
     train_images = train_images + more_X
