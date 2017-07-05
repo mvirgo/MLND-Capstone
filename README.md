@@ -18,9 +18,11 @@ Lastly, with the finalized fully convolutional model, there are a couple additio
 An additional video can be seen at [this Dropbox link.](https://www.dropbox.com/s/18jia2x9pg42s4n/proj_reg_vid.mp4?dl=0)
 
 ## Dataset
-**If you downloaded this dataset prior to 5/22/17, please re-download it. The original that I posted did not include proper horizontal flipping of the images and labels.**
+#### For fully convolutional network
+You can download the full training set of images I used [here](https://www.dropbox.com/s/rrh8lrdclzlnxzv/full_CNN_train.p?dl=0) (**NOTE:** this is 468 MB!) and the full set of 'labels' (which are just the 'G' channel from an RGB image of a re-drawn lane with an extra dimension added to make use in Keras easier) [here](https://www.dropbox.com/s/ak850zqqfy6ily0/full_CNN_labels.p?dl=0) (157 MB).
 
-You can download the full training set of images I used [here](https://www.dropbox.com/s/rrh8lrdclzlnxzv/full_CNN_train.p?dl=0) (**NOTE:** this is 468 MB!) and the full set of 'labels' (which are just the 'G' channel from an RGB image of a re-drawn lane with an extra dimension added to make use in Keras easier) [here](https://www.dropbox.com/s/ak850zqqfy6ily0/full_CNN_labels.p?dl=0) (157 MB). 
+#### Images with coefficient labels
+If you just want the original training images with no flips or rotations (downsized to 80x160x3) you can find them [here](https://www.dropbox.com/s/1bnp70bhaz5kma9/coeffs_train.p?dl=0). You can also find the related coefficient labels (i.e. not the drawn lane labels, but the cofficients for a polynomial line) [here](https://www.dropbox.com/s/ieulvrcooetrlmd/coeffs_labels.p?dl=0).
 
 ## Software Requirements
 If using Linux or Mac, you can use [this conda environment file](environment.yml). In the command line, use `conda env create -f lane_environment.yml` and then `source activate lane_environment` to use the environment. This is a slightly modified environment from that used in Term of the Udacity SDCND. Please see the note on moviepy below.
