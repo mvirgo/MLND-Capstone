@@ -131,7 +131,8 @@ model.add(Deconvolution2D(1, 3, 3, border_mode='valid', subsample=(1,1), activat
 
 
 # Using a generator to help the model use less data
-# I found NOT using any image augmentation here surprisingly yielded significantly better results
+# I found NOT using any image augmentation here surprisingly yielded slightly better results
+# Channel shifts help with shadows but overall detection is worse
 datagen = ImageDataGenerator()
 datagen.fit(X_train)
 
