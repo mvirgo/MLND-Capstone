@@ -43,9 +43,9 @@ Alternatively, you can use the following:
 **Note: Depending on which versions of the above are downloaded, there may be an issue in moviepy when trying to generate the video file from `draw_detected_lanes.py`. If so, please navigate to the following on your computer (if using Anaconda): `Anaconda3/Lib/site-packages/moviepy/audio/io/readers.py`, and go to line 122, which should be changed to `reshape((int(len(result)/self.nchannels),`, i.e. adding to change the result of the division to an integer. I will also add a link to a conda environment in the near future in case that's easier.**
 
 ## Key Files
-Although I have included many of the python files I created to help process my images and various prototype neural networks, the key files are:
+Although I have included many of the python files I created to help process my images and various prototype neural networks in the ["early_steps" branch](https://github.com/mvirgo/MLND-Capstone/tree/early_steps), the key files are:
 * [fully_conv_NN.py](fully_conv_NN.py) - Assuming you have downloaded the training images and labels above, this is the fully convolutional neural network to train using that data.
-* [full_CNN_model.json](full_CNN_model.json) & [full_CNN_model.h5](full_CNN_model.h5) - These are the final outputs from the above CNN. Note that if you train the file above the originals here will be overwritten! These get fed into the below.
+* [full_CNN_model.h5](full_CNN_model.h5) - These are the final outputs from the above CNN. Note that if you train the file above the originals here will be overwritten! These get fed into the below.
 * [draw_detected_lanes.py](draw_detected_lanes.py) - Using the trained model and an input video, this predicts the lane, averages across 5 frames, and returns the original video with predicted lane lines drawn onto it. Note that it is currently set up to use the basic video from Udacity's SDCND Advanced Lane Lines project [here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/project_video.mp4), but the code at the end can be changed to accept different input videos.
 
 ## Training Image Statistics

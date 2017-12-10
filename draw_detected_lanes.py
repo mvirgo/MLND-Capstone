@@ -3,14 +3,10 @@ import cv2
 from scipy.misc import imresize
 from moviepy.editor import VideoFileClip
 from IPython.display import HTML
-from keras.models import model_from_json
+from keras.models import load_model
 
 # Load Keras model
-json_file = open('full_CNN_model.json', 'r')
-json_model = json_file.read()
-json_file.close()
-model = model_from_json(json_model)
-model.load_weights('full_CNN_model.h5')
+model = load_model('full_CNN_model.h5')
 
 # Class to average lanes with
 class Lanes():
