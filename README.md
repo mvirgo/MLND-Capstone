@@ -25,7 +25,7 @@ You can download the full training set of images I used [here](https://www.dropb
 If you just want the original training images with no flips or rotations (downsized to 80x160x3) you can find them [here](https://www.dropbox.com/s/1bnp70bhaz5kma9/coeffs_train.p?dl=0). You can also find the related coefficient labels (i.e. not the drawn lane labels, but the cofficients for a polynomial line) [here](https://www.dropbox.com/s/ieulvrcooetrlmd/coeffs_labels.p?dl=0).
 
 ## Software Requirements
-If using Linux or Mac, you can use [this conda environment file](environment.yml). In the command line, use `conda env create -f lane_environment.yml` and then `source activate lane_environment` to use the environment. This is a slightly modified environment from that used in Term of the Udacity SDCND. Please see the note on moviepy below.
+If using Linux or Mac, you can use [this conda environment file](lane_environment.yml). In the command line, use `conda env create -f lane_environment.yml` and then `source activate lane_environment` to use the environment. This is a slightly modified environment from that used in Term of the Udacity SDCND. Please see the note on moviepy below.
 
 Alternatively, you can use the following:
 * Python 3.5 or higher. Most of the included code also works in Python 2.7, although the pickle files used for the training images and labels are encoded for use in Python 3 and would need to be loaded and restructured to work in Python 2.7. I would suggest downloading with Anaconda as you will get some of the below
