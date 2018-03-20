@@ -135,7 +135,7 @@ dependencies:
   - keras-vis==0.2
   - laser-geometry==1.6.4
   - message-filters==1.11.21
-  - moviepy==0.2.2.11
+  - moviepy==0.2.2.13
   - olefile==0.44
   - pluginlib==1.10.4
   - prompt-toolkit==1.0.9
