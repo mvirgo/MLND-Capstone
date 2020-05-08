@@ -5,14 +5,13 @@ from moviepy.editor import VideoFileClip
 from IPython.display import HTML
 from keras.models import load_model
 
-# Load Keras model
-model = load_model('full_CNN_model.h5')
 
 # Class to average lanes with
 class Lanes():
     def __init__(self):
         self.recent_fit = []
         self.avg_fit = []
+
 
 def road_lines(image):
     """ Takes in a road image, re-sizes for the model,
@@ -50,13 +49,17 @@ def road_lines(image):
 
     return result
 
-lanes = Lanes()
 
-# Where to save the output video
-vid_output = 'proj_reg_vid.mp4'
+if __name__ == '__main__':
+    # Load Keras model
+    model = load_model('full_CNN_model.h5')
+    # Create lanes object
+    lanes = Lanes()
 
-# Location of the input video
-clip1 = VideoFileClip("project_video.mp4")
-
-vid_clip = clip1.fl_image(road_lines)
-vid_clip.write_videofile(vid_output, audio=False)
+    # Where to save the output video
+    vid_output = 'proj_reg_vid.mp4'
+    # Location of the input video
+    clip1 = VideoFileClip("project_video.mp4")
+    # Create the clip
+    vid_clip = clip1.fl_image(road_lines)
+    vid_clip.write_videofile(vid_output, audio=False)
