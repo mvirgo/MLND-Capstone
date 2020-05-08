@@ -25,22 +25,7 @@ You can download the full training set of images I used [here](https://www.dropb
 If you just want the original training images with no flips or rotations (downsized to 80x160x3) you can find them [here](https://www.dropbox.com/s/1bnp70bhaz5kma9/coeffs_train.p?dl=0). You can also find the related coefficient labels (i.e. not the drawn lane labels, but the cofficients for a polynomial line) [here](https://www.dropbox.com/s/ieulvrcooetrlmd/coeffs_labels.p?dl=0).
 
 ## Software Requirements
-If using Linux or Mac, you can use [this conda environment file](lane_environment.yml). In the command line, use `conda env create -f lane_environment.yml` and then `source activate lane_environment` to use the environment. This is a slightly modified environment from that used in Term of the Udacity SDCND. Please see the note on moviepy below.
-
-Alternatively, you can use the following:
-* Python 3.5 or higher. Most of the included code also works in Python 2.7, although the pickle files used for the training images and labels are encoded for use in Python 3 and would need to be loaded and restructured to work in Python 2.7. I would suggest downloading with Anaconda as you will get some of the below
-* TensorFlow - Suggested to download TensorFlow GPU for best performance
-* Keras
-* OpenCV (known as cv2 once downloaded) - opencv-python if installing from command line
-* h5py
-* imageio
-* matplotlib
-* moviepy
-* numpy+mkl
-* scikit-learn
-* scipy
-
-**Note: Depending on which versions of the above are downloaded, there may be an issue in moviepy when trying to generate the video file from `draw_detected_lanes.py`. If so, please navigate to the following on your computer (if using Anaconda): `Anaconda3/Lib/site-packages/moviepy/audio/io/readers.py`, and go to line 122, which should be changed to `reshape((int(len(result)/self.nchannels),`, i.e. adding to change the result of the division to an integer. I will also add a link to a conda environment in the near future in case that's easier.**
+You can use [this conda environment file](lane_environment.yml). In the command line, use `conda env create -f lane_environment.yml` and then `source activate lane_environment` (or just `activate` with the environment name on Windows) to use the environment.
 
 ## Key Files
 Although I have included many of the python files I created to help process my images and various prototype neural networks in the ["early_steps" branch](https://github.com/mvirgo/MLND-Capstone/tree/early_steps), the key files are:
